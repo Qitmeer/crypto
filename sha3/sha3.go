@@ -113,7 +113,12 @@ func (d *state) padAndPermute(dsbyte byte) {
 	// This adds the final one bit for the padding. Because of the way that
 	// bits are numbered from the LSB upwards, the final bit is the MSB of
 	// the last byte.
-	d.buf[d.rate-1] ^= 0x80
+	if d.dsbyte == dsbyteQitmeer {
+		// the qitmeer use a special final byte for the padding.
+		d.buf[d.rate-1] ^= endbyteQitmeer
+	} else {
+		d.buf[d.rate-1] ^= 0x80
+	}
 	// Apply the permutation
 	d.permute()
 	d.state = spongeSqueezing

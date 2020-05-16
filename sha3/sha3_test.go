@@ -188,6 +188,56 @@ func TestKeccak(t *testing.T) {
 	}
 }
 
+func TestQitmeerKeccak(t *testing.T) {
+	tests := []struct {
+		fn   func() hash.Hash
+		data []byte
+		want string
+	}{
+		{
+			NewQitmeerKeccak256,
+			[]byte("helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhel"),
+			"e6138f8e7dab430ec751d25f71e2233a507527798619ffef22e9ea83926d2fe5",
+		},
+		{
+			New256,
+			[]byte("helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhel"),
+			"d6a1dea263024bebe9e714acb28d49a4d0139b4dcc22a42bc45a970e1cb948fe",
+		},
+		{
+			NewLegacyKeccak256,
+			[]byte("helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhel"),
+			"378b70c2b60da4fd180a45b5142deef5da401a6834ca5f378e1fc9ef13b12a74",
+		},
+		//helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhea
+		{
+			NewQitmeerKeccak256,
+			[]byte("helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhea"),
+			"666a95a02795e96663cca7d45006f002373a51dde02f87cef8c92472f968b20d",
+		},
+		{
+			New256,
+			[]byte("helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhealoworldhea"),
+			"61343866a86b156155d6133c46fdd84c17eb1af17f2b7a03d91b76f28380b10f",
+		},
+		{
+			NewLegacyKeccak256,
+			[]byte("helloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhelloworldhea"),
+			"6274f1f50f304a4155ffb367ae1348a01ff40a03946848661c31a8820535dd50",
+		},
+	}
+
+	for _, u := range tests {
+		h := u.fn()
+		h.Write(u.data)
+		got := h.Sum(nil)
+		want := decodeHex(u.want)
+		if !bytes.Equal(got, want) {
+			t.Errorf("unexpected hash for size %d: got '%x' want '%s'", h.Size()*8, got, u.want)
+		}
+	}
+}
+
 // TestUnalignedWrite tests that writing data in an arbitrary pattern with
 // small input buffers.
 func TestUnalignedWrite(t *testing.T) {

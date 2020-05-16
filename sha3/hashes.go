@@ -64,6 +64,17 @@ func NewLegacyKeccak256() hash.Hash { return &state{rate: 136, outputLen: 32, ds
 // that uses non-standard padding. All other users should use New512 instead.
 func NewLegacyKeccak512() hash.Hash { return &state{rate: 72, outputLen: 64, dsbyte: 0x01} }
 
+
+const (
+	dsbyteQitmeer = 0x81
+	endbyteQitmeer = 0xf1
+)
+
+// NewQitmeerKeccak256 creates a new Qitmeer Keccak-256 hash.
+// WARNING! Only use this function for Qitmeer testnet POW only, the function create
+// keccak-256 hash by using a special padding way internally.
+func NewQitmeerKeccak256() hash.Hash { return &state{rate:136, outputLen: 32, dsbyte: dsbyteQitmeer} }
+
 // Sum224 returns the SHA3-224 digest of the data.
 func Sum224(data []byte) (digest [28]byte) {
 	h := New224()
