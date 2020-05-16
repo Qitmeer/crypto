@@ -1,4 +1,4 @@
-module golang.org/x/crypto
+module github.com/Qitmeer/crypto
 
 go 1.11
 
