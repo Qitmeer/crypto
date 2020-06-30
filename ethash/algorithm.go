@@ -49,19 +49,6 @@ func isLittleEndian() bool {
 	return *(*byte)(unsafe.Pointer(&n)) == 0x04
 }
 
-// safeXORBytes xors one by one. It works on all architectures, independent if
-// it supports unaligned read/writes or not.
-func safeXORBytes(dst, a, b []byte) int {
-	n := len(a)
-	if len(b) < n {
-		n = len(b)
-	}
-	for i := 0; i < n; i++ {
-		dst[i] = a[i] ^ b[i]
-	}
-	return n
-}
-
 // Keccak512 calculates and returns the Keccak512 hash of the input data.
 func Keccak512(data ...[]byte) []byte {
 	d := sha3.NewLegacyKeccak512()
