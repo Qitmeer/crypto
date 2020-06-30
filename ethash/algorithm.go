@@ -1,6 +1,8 @@
 // Copyright 2020 Qitmeer Developers
+// Use of this source code is governed by an ISC
+// license that can be found in the LICENSE file.
 //
-// This file original from the "go-ethereum/consensus/ethash"
+// This file Adapted from the "go-ethereum/consensus/ethash"
 //
 
 package ethash
@@ -18,6 +20,7 @@ import (
 	"unsafe"
 
 	"github.com/Qitmeer/crypto/sha3"
+	"github.com/Qitmeer/crypto/fastxor"
 )
 
 const (
@@ -38,13 +41,25 @@ const (
 	HashLength = 32
 )
 
-
 // TODO remove the hack code
 // isLittleEndian returns whether the local system is running in little or big
 // endian byte order.
 func isLittleEndian() bool {
 	n := uint32(0x01020304)
 	return *(*byte)(unsafe.Pointer(&n)) == 0x04
+}
+
+// safeXORBytes xors one by one. It works on all architectures, independent if
+// it supports unaligned read/writes or not.
+func safeXORBytes(dst, a, b []byte) int {
+	n := len(a)
+	if len(b) < n {
+		n = len(b)
+	}
+	for i := 0; i < n; i++ {
+		dst[i] = a[i] ^ b[i]
+	}
+	return n
 }
 
 // Keccak512 calculates and returns the Keccak512 hash of the input data.
@@ -205,7 +220,7 @@ func generateCache(dest []uint32, epoch uint64, seed []byte) {
 				dstOff = j * hashBytes
 				xorOff = (binary.LittleEndian.Uint32(cache[dstOff:]) % uint32(rows)) * hashBytes
 			)
-			XORBytes(temp, cache[srcOff:srcOff+hashBytes], cache[xorOff:xorOff+hashBytes])
+			fastxor.XorBytes(temp, cache[srcOff:srcOff+hashBytes], cache[xorOff:xorOff+hashBytes])
 			keccak512(cache[dstOff:], temp)
 
 			atomic.AddUint32(&progress, 1)

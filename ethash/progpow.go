@@ -1,15 +1,17 @@
 // Copyright 2020 Qitmeer Developers
+// Use of this source code is governed by an ISC
+// license that can be found in the LICENSE file.
 //
-// This file original from the "go-ethereum/consensus/ethash"'s progpow fork.
+// This file adapted from the "go-ethereum/consensus/ethash"'s progpow fork.
 //
 
-// Package ethash implements the ethash proof-of-work consensus engine.
 package ethash
 
 import (
 	"encoding/binary"
-	"github.com/Qitmeer/crypto/sha3"
 	"math/bits"
+
+	"github.com/Qitmeer/crypto/sha3"
 )
 
 const (
