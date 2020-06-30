@@ -1,6 +1,8 @@
 // Copyright 2020 Qitmeer Developers
+// Use of this source code is governed by an ISC
+// license that can be found in the LICENSE file.
 //
-// This file original from the "go-ethereum/consensus/ethash"'s progpow fork.
+// This file adapted from the "go-ethereum/consensus/ethash"'s progpow fork.
 //
 
 package ethash
@@ -10,11 +12,12 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/Qitmeer/crypto/sha3"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
 	"testing"
+
+	"github.com/Qitmeer/crypto/sha3"
 )
 
 func TestRandomMerge(t *testing.T) {

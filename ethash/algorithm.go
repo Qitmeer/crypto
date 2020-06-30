@@ -1,6 +1,8 @@
 // Copyright 2020 Qitmeer Developers
+// Use of this source code is governed by an ISC
+// license that can be found in the LICENSE file.
 //
-// This file original from the "go-ethereum/consensus/ethash"
+// This file Adapted from the "go-ethereum/consensus/ethash"
 //
 
 package ethash
@@ -18,6 +20,7 @@ import (
 	"unsafe"
 
 	"github.com/Qitmeer/crypto/sha3"
+	"github.com/Qitmeer/crypto/fastxor"
 )
 
 const (
@@ -37,7 +40,6 @@ const (
 const (
 	HashLength = 32
 )
-
 
 // TODO remove the hack code
 // isLittleEndian returns whether the local system is running in little or big
@@ -205,7 +207,7 @@ func generateCache(dest []uint32, epoch uint64, seed []byte) {
 				dstOff = j * hashBytes
 				xorOff = (binary.LittleEndian.Uint32(cache[dstOff:]) % uint32(rows)) * hashBytes
 			)
-			XORBytes(temp, cache[srcOff:srcOff+hashBytes], cache[xorOff:xorOff+hashBytes])
+			fastxor.XorBytes(temp, cache[srcOff:srcOff+hashBytes], cache[xorOff:xorOff+hashBytes])
 			keccak512(cache[dstOff:], temp)
 
 			atomic.AddUint32(&progress, 1)

@@ -1,6 +1,8 @@
 // Copyright 2020 Qitmeer Developers
+// Use of this source code is governed by an ISC
+// license that can be found in the LICENSE file.
 //
-// This file original from the "go-ethereum/consensus/ethash"
+// This file adapted from the "go-ethereum/consensus/ethash"
 //
 
 package ethash
